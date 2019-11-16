@@ -8,14 +8,17 @@ app.get('/teams', (request, response) => {
 })
 
 app.get('/teams/:id', (request, response) => {
-    //request.params.id
-    const matchingTeam = teams.filter((team) => {
+    let matchingTeam = teams.filter((team) => {
         return team.id === parseInt(request.params.id)
     })
-    if (matchingTeam.length) {
+    let matchingAbb = teams.filter((team) => {
+        return team.abbreviation === (request.params.id.toUpperCase())
+    })
+
+    if (!isNaN(request.params.id)) {
         response.send(matchingTeam)
     } else {
-        response.sendStatus(404)
+        response.send(matchingAbb)
     }
 })
 
