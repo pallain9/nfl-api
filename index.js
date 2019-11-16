@@ -11,8 +11,11 @@ app.get('/teams/:id', (request, response) => {
     const matchingTeam = teams.filter((team) => {
         return team.id === parseInt(request.params.id) || team.abbreviation.toUpperCase() === request.params.id.toUpperCase()
     })
-    matchingTeam.length
-    response.send(matchingTeam)
+    if (matchingTeam.length) {
+        response.send(matchingTeam)
+    } else {
+        response.sendStatus(404)
+    }
 })
 
 
