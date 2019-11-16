@@ -8,20 +8,14 @@ app.get('/teams', (request, response) => {
 })
 
 app.get('/teams/:id', (request, response) => {
-    let matchingTeam = teams.filter((team) => {
-        return team.id === parseInt(request.params.id)
+    const matchingTeam = teams.filter((team) => {
+        return team.id === parseInt(request.params.id) || team.abbreviation.toUpperCase() === request.params.id.toUpperCase()
     })
-    let matchingAbb = teams.filter((team) => {
-        return team.abbreviation === (request.params.id.toUpperCase())
-    })
-
-    if (!isNaN(request.params.id)) {
-        response.send(matchingTeam)
-    } else {
-        response.send(matchingAbb)
-    }
+    matchingTeam.length
+    response.send(matchingTeam)
 })
 
-app.listen(1337, () => { console.log('listening on port 1337') })
 
-module.exports = app
+const server = app.listen(1337, () => { console.log('listening on port 1337') })
+
+module.exports = server
