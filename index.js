@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
 const express = require('express')
-
+const Sequelize = require('sequelize')
 const models = require('./models')
 
 const app = express()
@@ -11,8 +11,11 @@ app.get('/teams', async (request, response) => {
 })
 
 app.get('/teams/:id', async (request, response) => {
+    const Op = Sequelize.Op
     const matchingTeam = await models.Teams.findAll({
-        where: { id: request.params.id }
+        where: {
+            [Op.or]: [{ id: request.params.id }, { abbreviation: request.params.id }]
+        }
     })
     if (matchingTeam.length) {
         response.send(matchingTeam)
