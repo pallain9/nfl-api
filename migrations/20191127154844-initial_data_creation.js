@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -9,7 +9,7 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    return queryInterface.bulkInsert('teams', [
+    await queryInterface.bulkInsert('teams', [
       { location: "Buffalo", mascot: "Bills", abbreviation: "BUF", conference: "AFC", division: "East" },
       { location: "Miami", mascot: "Dolphins", abbreviation: "MIA", conference: "AFC", division: "East" },
       { location: "New England", mascot: "Patriots", abbreviation: "NE", conference: "AFC", division: "East" },
@@ -43,9 +43,15 @@ module.exports = {
       { location: "San Francisco", mascot: "49ers", abbreviation: "SF", conference: "NFC", division: "West" },
       { location: "Seattle", mascot: "Seahawks", abbreviation: "SEA", conference: "NFC", division: "West" }
     ])
+    return queryInterface.bulkInsert('players', [
+      { firstName: "Tom", lastName: "Brady", position: "QB", teamId: 3 },
+      { firstName: "Julian", lastName: "Edelman", position: "WR", teamId: 3 },
+      { firstName: "James", lastName: "White", position: "RB", teamId: 3 },
+      { firstName: "Josh", lastName: "Gordon", position: "WR", teamId: 3 },
+    ])
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: async (queryInterface, Sequelize) => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -53,6 +59,12 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
+    await queryInterface.bulkDelete('players', [
+      { firstName: "Tom", lastName: "Brady", position: "QB", teamId: 3 },
+      { firstName: "Julian", lastName: "Edelman", position: "WR", teamId: 3 },
+      { firstName: "James", lastName: "White", position: "RB", teamId: 3 },
+      { firstName: "Josh", lastName: "Gordon", position: "WR", teamId: 3 },
+    ])
 
     return queryInterface.bulkDelete('teams', [
       { location: "Buffalo", mascot: "Bills", abbreviation: "BUF", conference: "AFC", division: "East" },
@@ -88,5 +100,5 @@ module.exports = {
       { location: "San Francisco", mascot: "49ers", abbreviation: "SF", conference: "NFC", division: "West" },
       { location: "Seattle", mascot: "Seahawks", abbreviation: "SEA", conference: "NFC", division: "West" }
     ])
-  },
+  }
 };

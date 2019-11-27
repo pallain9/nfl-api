@@ -10,15 +10,36 @@ app.get('/teams', async (request, response) => {
     response.send(teams)
 })
 
+app.get('/players', async (request, response) => {
+    const players = await models.Players.findAll({ include: models.Teams })
+    response.send(players)
+})
+
 app.get('/teams/:id', async (request, response) => {
     const Op = Sequelize.Op
     const matchingTeam = await models.Teams.findAll({
         where: {
             [Op.or]: [{ id: request.params.id }, { abbreviation: request.params.id }]
-        }
+        },
+        include: models.Players,
     })
     if (matchingTeam.length) {
         response.send(matchingTeam)
+    } else {
+        response.sendStatus(404)
+    }
+})
+
+app.get('/players/:id', async (request, response) => {
+    const Op = Sequelize.Op
+    const matchingPlayer = await models.Players.findAll({
+        where: {
+            [Op.or]: [{ id: request.params.id }, { lastName: request.params.id }]
+        },
+        include: models.Teams,
+    })
+    if (matchingPlayer.length) {
+        response.send(matchingPlayer)
     } else {
         response.sendStatus(404)
     }
